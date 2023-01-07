@@ -12,6 +12,7 @@ import Login from '../screens/Login';
 import Profile from '../screens/Profile';
 import EditProfile from '../screens/EditProfile';
 import Search from '../screens/Search';
+import ChangePassword from '../screens/ChangePassword';
 
 const Stacks = () => {
   const Stack = createNativeStackNavigator();
@@ -19,48 +20,48 @@ const Stacks = () => {
   const isLogged = true;
   const isLoading = false;
 
-  //   const {
-  //     authStateContext: { isLogged, isLoading },
-  //     dispatchAuth,
-  //   } = useAuth();
+    // const {
+    //   authStateContext: { isLogged, isLoading },
+    //   dispatchAuth,
+    // } = useAuth();
 
-  //   useEffect(() => {
-  //     const refreshApp = async () => {
-  //       await refreshAccessToken();
-  //       const result = await getProfile();
-  //       dispatchAuth({
-  //         type: 'REFRESH_TOKEN',
-  //         payload: {
-  //           currentUser: result.data,
-  //         },
-  //       });
-  //       dispatchAuth({
-  //         type: 'SET_LOADING',
-  //         payload: { isLoading: false },
-  //       });
-  //     };
+    // useEffect(() => {
+    //   const refreshApp = async () => {
+    //     // await refreshAccessToken();
+    //     const result = await getProfile();
+    //     dispatchAuth({
+    //       type: 'REFRESH_TOKEN',
+    //       payload: {
+    //         currentUser: result?.data,
+    //       },
+    //     });
+    //     dispatchAuth({
+    //       type: 'SET_LOADING',
+    //       payload: { isLoading: false },
+    //     });
+    //   };
 
-  //     AsyncStorage.getItem('isLogged').then(value => {
-  //       if (value === 'true') {
-  //         refreshApp();
-  //       } else {
-  //         dispatchAuth({
-  //           type: 'SET_LOADING',
-  //           payload: { isLoading: false },
-  //         });
-  //       }
-  //     });
-  //   }, []);
+    //   AsyncStorage.getItem('isLogged').then(value => {
+    //     if (value === 'true') {
+    //       refreshApp();
+    //     } else {
+    //       dispatchAuth({
+    //         type: 'SET_LOADING',
+    //         payload: { isLoading: false },
+    //       });
+    //     }
+    //   });
+    // }, []);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
+      {/* <Stack.Navigator
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
         }}
-      >
-        {isLoading ? (
+      > */}
+        {/* {isLoading ? (
           <Stack.Screen name="Loading" component={Spinner} />
         ) : isLogged ? (
           <React.Fragment>
@@ -76,12 +77,21 @@ const Stacks = () => {
                 animation: 'slide_from_bottom',
               }}
             />
+            <Stack.Screen name="ChangePassword" component={ChangePassword}/>
           </React.Fragment>
         ) : (
           <React.Fragment>
             <Stack.Screen name="Login" component={Login} />
           </React.Fragment>
         )}
+      </Stack.Navigator> */}
+
+      {/* demo */}
+      <Stack.Navigator>
+        <React.Fragment>
+          <Stack.Screen name="Thay đổi mật khẩu" component={ChangePassword}/>
+          {/* <Stack.Screen name="Login" component={Login} /> */}
+        </React.Fragment>
       </Stack.Navigator>
     </NavigationContainer>
   );

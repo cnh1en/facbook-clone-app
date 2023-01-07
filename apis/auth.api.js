@@ -27,11 +27,27 @@ const register = async () => {
 
 const logout = async () => {
   try {
-    await axios.post('https://devapi.bkwatch.me/api/logout');
+    await axios.post('https://devapi.bkwatch.me/api/logout', {
+      old_password,
+      new_password
+    });
   } catch (error) {
     Alert.alert(JSON.stringify(error));
   }
 };
+
+const changePassword = async ({old_password, new_password}) => {
+  try {
+    const response = await axios.post('https://devapi.bkwatch.me/api/profile/change-password', {
+      old_password,
+      new_password
+    })
+    // console.log(response.data)
+    return response.data;
+  } catch (error){
+    Alert.alert(JSON.stringify(error));
+  }
+}
 
 const getProfile = async () => {
   try {
@@ -50,4 +66,4 @@ const editProfile = async body => {
   }
 };
 
-export { login, register, logout, getProfile, editProfile };
+export { login, register, logout, getProfile, editProfile, changePassword };
