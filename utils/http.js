@@ -1,60 +1,87 @@
 import axios from 'axios';
+import { app } from './env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Http {
   constructor() {
-    this.instance = axios.create({
-      baseURL: 'https://devapi.bkwatch.me/api/',
-      timeout: 10000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    this.refreshAccessTokenRequest = null;
+    Http.getTokens().then(tokens => {
+      const {access_token, refresh_token} = tokens
+      this.instance = axios.create({
+        baseURL: app.api_url,
+        timeout: 10000,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token,
+          'refresh_token': refresh_token
+        },
+      });
+      this.refreshAccessTokenRequest = null;
 
-    this.instance.interceptors.response.use(
-      config => config.data,
-      error => {
-        if (error.response.status === 401) {
-          this.refreshAccessTokenRequest =
-            this.refreshAccessTokenRequest || refreshAccessToken();
-
-          return this.refreshAccessTokenRequest
-            .then(() => this.instance(error.response.config))
-            .catch(error => console.log(error))
-            .finally(() => {
-              this.refreshAccessTokenRequest = null;
-            });
-        }
-      },
-    );
+      this.instance.interceptors.response.use(
+        config => config.data,
+        async error => {
+          const originalRequest = error.config;
+          if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            
+            this.refreshAccessTokenRequest =
+              this.refreshAccessTokenRequest || refreshAccessToken();
+            await AsyncStorage.setItem('token', JSON.stringify(this.refreshAccessTokenRequest))
+            axios.defaults.headers.common['Authorization'] = `Bearer ${this.refreshAccessTokenRequest.access_token}`;
+            originalRequest.headers['Authorization'] = `Bearer ${this.refreshAccessTokenRequest.access_token}`;
+            axios.defaults.headers.common['refresh_token'] = this.refreshAccessTokenRequest.refresh_token;
+            originalRequest.headers['refresh_token'] = this.refreshAccessTokenRequest.refresh_token;
+            return this.refreshAccessTokenRequest
+              .then(() => this.instance(originalRequest))
+              .catch(error => console.log(error))
+              .finally(() => {
+                this.refreshAccessTokenRequest = null;
+              });
+          }
+        },
+      );
+    }).catch(e => {
+      console.log("Http có lỗi", e)
+      this.instance = undefined
+    })
   }
 
-  get(url) {
-    return this.instance.get(url);
+  get(url, config) {
+    return this.instance.get(url, config);
   }
 
-  post(url, body) {
-    return this.instance.post(url, body);
+  post(url, body, config) {
+    return this.instance.post(url, body, config);
   }
 
-  delete(url) {
-    return this.instance.delete(url);
+  delete(url, config) {
+    return this.instance.delete(url, config);
   }
 
-  put(url, body) {
-    return this.instance.put(url, body);
+  put(url, body, config) {
+    return this.instance.put(url, body, config);
   }
 
-  patch(url, body) {
-    return this.instance.patch(url, body);
+  patch(url, body, config) {
+    return this.instance.patch(url, body, config);
+  }
+
+  static get AsyncStorage(){
+    return AsyncStorage
+  }
+
+  static async getTokens(){
+    const data = JSON.parse(await this.AsyncStorage.getItem('token'))
+    return data
   }
 }
 
 const refreshAccessToken = async () => {
   try {
-    await axios.post('https://devapi.bkwatch.me/api/refresh-token');
+    return await http.post(app.api_url + 'refresh-token');
   } catch (error) {
     console.log(error);
+    return false
   }
 };
 

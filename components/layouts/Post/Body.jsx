@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import React from 'react';
 import Test from '../../../assets/banner.png';
 
-const Body = () => {
+const Body = ({content, media_file}) => {
   return (
     <View
       style={{
@@ -14,13 +14,10 @@ const Body = () => {
           textAlign: 'justify',
         }}
       >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat culpa
-        exercitationem, amet necessitatibus ipsam explicabo? Deserunt fuga
-        facere magnam mollitia odio! Facere est quibusdam sint alias excepturi
-        fugiat doloremque nemo.
+        {content}
       </Text>
 
-      <Image source={Test} resizeMode="cover" style={styles.image} />
+      <Image source={media_file[0].url} resizeMode="cover" style={styles.image} />
     </View>
   );
 };

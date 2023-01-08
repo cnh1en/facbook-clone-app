@@ -22,6 +22,7 @@ const Setting = () => {
   const handleSignOut = async () => {
     await logout();
     AsyncStorage.removeItem('isLogged');
+    AsyncStorage.removeItem('token');
     dispatchAuth({
       type: 'SIGN_OUT',
     });

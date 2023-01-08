@@ -20,7 +20,13 @@ const Finish = () => {
       if (response.code === 1000) {
         const { email, password } = registerState;
         const response = await login({ username: email, password });
-        await AsyncStorage.setItem('isLogged', JSON.stringify(true));
+        await Promise.all([
+          AsyncStorage.setItem('isLogged', JSON.stringify(true)),
+          AsyncStorage.setItem('token', JSON.stringify({
+            access_token: result.data.access_token,
+            refresh_token: result.data.refresh_token,
+          }))
+        ])
         dispatchAuth({
           type: 'SIGN_IN',
           payload: {

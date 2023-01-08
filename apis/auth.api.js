@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { app } from '../utils/env';
 import http from '../utils/http';
 
 const login = async ({ username, password }) => {
   try {
-    const response = await axios.post('https://devapi.bkwatch.me/api/login', {
+    const response = await axios.post(`${app.api_url}login`, {
       username,
       password,
     });
@@ -57,4 +58,21 @@ const editProfile = async body => {
   }
 };
 
-export { login, register, logout, getProfile, editProfile };
+const getPost = async (page, limit) => {
+  try {
+    const response = await http.get('post', {
+      params: {
+        page,
+        limit
+      }
+    });
+    console.log("response", response)
+    if(response.error) return false
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return false
+  }
+};
+
+export { login, register, logout, getProfile, editProfile, getPost };

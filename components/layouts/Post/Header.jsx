@@ -4,7 +4,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import Conan from '../../../assets/conan.jpeg';
 import Avatar from '../Avatar';
 
-const Header = () => {
+const Header = ({created_by = {}, created_at, modified_level}) => {
   return (
     <View
       style={{
@@ -19,14 +19,14 @@ const Header = () => {
         }}
       >
         <Avatar
-          source={Conan}
+          source={created_by.avatar_url}
           styles={{
             marginRight: 5,
           }}
         />
 
         <View>
-          <Text style={{ fontWeight: 'bold' }}>Conan</Text>
+          <Text style={{ fontWeight: 'bold' }}>{created_by.full_name}</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -40,7 +40,7 @@ const Header = () => {
                 marginRight: 10,
               }}
             >
-              1 hour ago
+              {created_at}
             </Text>
 
             <AntDesignIcon name="earth" size={10} />
