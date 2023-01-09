@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import Conan from '../../../assets/conan.jpeg';
 import Avatar from '../Avatar';
+import {calculateTime} from '../../../utils/formatTime'
 
 const Header = ({created_by = {}, created_at, modified_level}) => {
   return (
@@ -40,7 +40,7 @@ const Header = ({created_by = {}, created_at, modified_level}) => {
                 marginRight: 10,
               }}
             >
-              {created_at}
+              {calculateTime(created_at)}
             </Text>
 
             <AntDesignIcon name="earth" size={10} />

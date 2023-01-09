@@ -14,7 +14,6 @@ const Feed = () => {
   useEffect(()=>{
     const getPosts =  async () => {
       const result = await getPost(page, LIMIT);
-      console.log(result)
       if(result){
         setPosts(prev => ([...prev, ...(result)]))
       }

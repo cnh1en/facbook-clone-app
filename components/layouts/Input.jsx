@@ -5,6 +5,7 @@ import Conan from '../../assets/conan.jpeg';
 import Avatar from './Avatar';
 
 const Input = ({ styles }) => {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'))
   const navigation = useNavigation();
 
   return (
@@ -24,7 +25,7 @@ const Input = ({ styles }) => {
           justifyContent: 'space-between',
         }}
       >
-        <Avatar source={Conan} />
+        <Avatar source={currentUser.avatar_url} />
 
         <TouchableOpacity
           style={{

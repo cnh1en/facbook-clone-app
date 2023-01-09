@@ -27,13 +27,13 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const result = await login({ username, password });
-      console.log(result)
       await Promise.all([
         AsyncStorage.setItem('isLogged', JSON.stringify(true)),
         AsyncStorage.setItem('token', JSON.stringify({
           access_token: result.data.access_token,
           refresh_token: result.data.refresh_token,
-        }))
+        })),
+        AsyncStorage.setItem('currentUser', JSON.stringify(result.data.profile))
       ])
       dispatchAuth({
         type: 'SIGN_IN',

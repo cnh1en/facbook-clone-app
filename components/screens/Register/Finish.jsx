@@ -25,7 +25,8 @@ const Finish = () => {
           AsyncStorage.setItem('token', JSON.stringify({
             access_token: result.data.access_token,
             refresh_token: result.data.refresh_token,
-          }))
+          })),
+          AsyncStorage.setItem('currentUser', JSON.stringify(result.data.profile))
         ])
         dispatchAuth({
           type: 'SIGN_IN',

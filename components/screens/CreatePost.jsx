@@ -13,15 +13,21 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import { createPost, uploadFile } from '../../apis/auth.api';
 import { pickImage } from '../../utils/pickImage';
 import Avatar from '../layouts/Avatar';
+import Spinner from './Spinner';
+
 
 const CreatePost = () => {
   const navigation = useNavigation();
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'))
 
   const [content, setContent] = useState('');
 
   const [images, setImages] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   const handlePickImage = () => {
     pickImage()
@@ -36,9 +42,30 @@ const CreatePost = () => {
       });
   };
 
+  if (loading) {
+    return <Spinner />;
+  }
+  console.log("images", images)
+  
+  const handleSubmit = async () => {
+    console.log("images", images)
+    setLoading(true)
+    var formData = new FormData();
+    formData.append("file", images[0]);
+    const files = await uploadFile(formData)
+    console.log(files,123)
+    // const rs = await createPost({
+    //   content: content,
+    //   media_url: [],
+    //   modified_level: 'public'
+    // })
+    // console.log("rs",rs)
+    setLoading(false)
+  }
+
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <Button title="POST" disabled={!content} />,
+      headerRight: () => <Button title="POST" onPress={handleSubmit} disabled={!content} />,
     });
   }, [content, navigation]);
 
@@ -64,7 +91,7 @@ const CreatePost = () => {
               alignItems: 'center',
             }}
           >
-            <Avatar size={70} />
+            <Avatar size={70} source={currentUser.avatar_url}/>
             <View
               style={{
                 marginLeft: 12,
@@ -77,7 +104,7 @@ const CreatePost = () => {
                   marginBottom: 4,
                 }}
               >
-                Chu Hien
+                {currentUser.firstname + ' ' + currentUser.lastname}
               </Text>
 
               <View

@@ -66,7 +66,6 @@ const getPost = async (page, limit) => {
         limit
       }
     });
-    console.log("response", response)
     if(response.error) return false
     return response.data;
   } catch (error) {
@@ -75,4 +74,30 @@ const getPost = async (page, limit) => {
   }
 };
 
-export { login, register, logout, getProfile, editProfile, getPost };
+const createPost = async (body) => {
+  try {
+    const response = await http.post('post', body);
+    if(response.error) return false
+    return response;
+  } catch (error) {
+    console.log(error);
+    return false
+  }
+};
+
+const uploadFile = async (body) => {
+  try {
+    const response = await http.post('action/upload', body, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    if(response.error) return false
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return false
+  }
+}
+
+export { login, register, logout, getProfile, editProfile, getPost, createPost, uploadFile };

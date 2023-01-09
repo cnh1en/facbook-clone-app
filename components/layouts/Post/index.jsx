@@ -6,7 +6,6 @@ import Footer from './Footer';
 import Header from './Header';
 
 const Post = ({ item }) => {
-  console.log(item)
   return (
     <Fragment>
       <View
@@ -27,8 +26,10 @@ const Post = ({ item }) => {
         <Footer 
           emotions={item.emotions} 
           likes={1} 
-          comments={1} 
-          shares={1} 
+          comments={item.number_comment} 
+          shares={item.number_share} 
+          number_emotions={item.number_emotions}
+          commentsData={item.comments}
         />
       </View>
       <Divider />

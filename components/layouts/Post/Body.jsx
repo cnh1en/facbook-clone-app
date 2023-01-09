@@ -11,13 +11,18 @@ const Body = ({content, media_file}) => {
     >
       <Text
         style={{
+          marginBottom: 10,
           textAlign: 'justify',
         }}
       >
         {content}
       </Text>
 
-      <Image source={media_file[0].url} resizeMode="cover" style={styles.image} />
+      {
+        media_file && media_file.length ?
+        <Image source={media_file[0].url} resizeMode="cover" style={styles.image} />
+        : <></>
+      }
     </View>
   );
 };
