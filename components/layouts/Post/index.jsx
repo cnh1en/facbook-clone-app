@@ -30,6 +30,7 @@ const Post = ({ item }) => {
           shares={item.number_share} 
           number_emotions={item.number_emotions}
           commentsData={item.comments}
+          _id={item._id}
         />
       </View>
       <Divider />

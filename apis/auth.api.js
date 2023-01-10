@@ -74,6 +74,22 @@ const getPost = async (page, limit) => {
   }
 };
 
+const getPostComment = async (page, limit, postId) => {
+  try {
+    const response = await http.get('comment/' + postId, {
+      params: {
+        page,
+        limit
+      }
+    });
+    if(response.error) return false
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return false
+  }
+};
+
 const createPost = async (body) => {
   try {
     const response = await http.post('post', body);
@@ -100,4 +116,4 @@ const uploadFile = async (body) => {
   }
 }
 
-export { login, register, logout, getProfile, editProfile, getPost, createPost, uploadFile };
+export { login, register, logout, getProfile, editProfile, getPost, createPost, uploadFile, getPostComment };

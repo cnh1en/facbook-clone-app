@@ -6,10 +6,17 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import Avatar from '../layouts/Avatar';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Divider from '../layouts/Divider';
+import { useEffect } from 'react';
+import { getPostComment } from '../../apis/auth.api';
+import { calculateTime } from '../../utils/formatTime';
+
+const LIMIT = 10
 
 const BottomSheetComment = React.forwardRef(
-  ({ data, likes, liked, onLike, onDislike }, ref) => {
+  ({ data, likes, liked, onLike, onDislike, postId }, ref) => {
     const [reply, setReply] = useState('');
+    const [page, setPage] = useState(0);
+    const [postComment, setPostComment] = useState([]);
 
     const textInputRef = useRef(null);
 
@@ -17,6 +24,17 @@ const BottomSheetComment = React.forwardRef(
       setReply(text);
       textInputRef?.current.focus();
     };
+
+    useEffect(()=>{
+      if(!postId) return 
+      const getPostComments =  async () => {
+        const result = await getPostComment(page, LIMIT, postId);
+        if(result){
+          setPostComment(prev => ([...prev, ...(result)]))
+        }
+      }
+      getPostComments()
+    }, [page])
 
     return (
       <BottomSheetModal
@@ -111,8 +129,15 @@ const BottomSheetComment = React.forwardRef(
               marginBottom: 50,
             }}
           >
-            {data.map((_, index) => (
-              <Comment key={index} onReply={handleReply} />
+            {postComment.map((_, index) => (
+              <Comment 
+                key={index} 
+                onReply={handleReply} 
+                avatarUrl={_.created_by.avatar_url} 
+                author={_.created_by.full_name} 
+                content={_.content}
+                createdAt={calculateTime(_.created_at)}
+              />
             ))}
           </View>
         </BottomSheetScrollView>

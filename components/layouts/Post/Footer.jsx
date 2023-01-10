@@ -1,12 +1,16 @@
 import React, { Fragment, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import { useAuth } from '../../../context/AuthContext';
 import BottomSheetComment from '../../bottomSheets/BottomSheetComment';
 import Avatar from '../Avatar';
 import Divider from '../Divider';
 
-const Footer = ({ comments, likes, shares, emotions, number_emotions, commentsData }) => {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+const Footer = ({ comments, likes, shares, emotions, number_emotions, commentsData, _id }) => {
+  const {
+    authStateContext: { currentUser = {} },
+  } = useAuth();
   const commentSheetModalRef = useRef(null);
   const [likesState, setLikesState] = useState(emotions.length);
   const [sharesState, setSharesState] = useState(shares);
@@ -57,9 +61,9 @@ const Footer = ({ comments, likes, shares, emotions, number_emotions, commentsDa
             )}
             {
               liked && likesState > 1 ? (
-                <Text style={{marginLeft: '2px'}}>Bạn và {likesState - 1} người khác đã thích</Text>
+                <Text style={{marginLeft: 2}}>Bạn và {likesState - 1} người khác</Text>
               ) : (
-                <Text style={{marginLeft: '2px'}}>{likesState}</Text>
+                <Text style={{marginLeft: 2}}>{likesState}</Text>
               )
             }
           </View>
@@ -188,6 +192,7 @@ const Footer = ({ comments, likes, shares, emotions, number_emotions, commentsDa
         liked={liked}
         onLike={onLike}
         onDislike={onDislike}
+        postId={_id}
       />
     </Fragment>
   );

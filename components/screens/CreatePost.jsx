@@ -14,14 +14,17 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { createPost, uploadFile } from '../../apis/auth.api';
-import { pickImage } from '../../utils/pickImage';
+import { useAuth } from '../../context/AuthContext';
+import { pickImage, uploadAsyncFile } from '../../utils/pickImage';
 import Avatar from '../layouts/Avatar';
 import Spinner from './Spinner';
 
 
 const CreatePost = () => {
   const navigation = useNavigation();
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+  const {
+    authStateContext: { currentUser = {} },
+  } = useAuth();
 
   const [content, setContent] = useState('');
 
@@ -45,15 +48,11 @@ const CreatePost = () => {
   if (loading) {
     return <Spinner />;
   }
-  console.log("images", images)
   
   const handleSubmit = async () => {
-    console.log("images", images)
     setLoading(true)
-    var formData = new FormData();
-    formData.append("file", images[0]);
-    const files = await uploadFile(formData)
-    console.log(files,123)
+    const file = await uploadAsyncFile(images[0].uri)
+    console.log(file,123)
     // const rs = await createPost({
     //   content: content,
     //   media_url: [],

@@ -10,7 +10,6 @@ const Comment = ({
   onReply,
 }) => {
   const [liked, setLiked] = useState(false);
-
   return (
     <View
       style={{
@@ -19,7 +18,7 @@ const Comment = ({
         justifyContent: 'space-between',
       }}
     >
-      <Avatar size={40} />
+      <Avatar source={avatarUrl} size={40} />
 
       <View
         style={{
@@ -41,13 +40,11 @@ const Comment = ({
               fontSize: 15,
             }}
           >
-            Conan
+            {author}
           </Text>
 
           <Text>
-            {Math.floor(Math.random() * 10) % 2
-              ? content
-              : ' Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ab saepe pariatur architecto officia aperiam dolorum iure dignissimos, explicabo, sequi voluptatibus a veniam adipisci maiores neque et nobis quisquam eveniet nemo.'}
+            {content}
           </Text>
         </View>
 

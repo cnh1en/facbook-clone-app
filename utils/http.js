@@ -4,46 +4,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Http {
   constructor() {
-    Http.getTokens().then(tokens => {
-      const {access_token, refresh_token} = tokens
-      this.instance = axios.create({
-        baseURL: app.api_url,
-        timeout: 10000,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + access_token,
-          'refresh_token': refresh_token
-        },
-      });
-      this.refreshAccessTokenRequest = null;
+    this.instance = axios.create({
+      baseURL: app.api_url,
+      timeout: 10000,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    this.refreshAccessTokenRequest = null;
 
-      this.instance.interceptors.response.use(
-        config => config.data,
-        async error => {
-          const originalRequest = error.config;
-          if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            
-            this.refreshAccessTokenRequest =
-              this.refreshAccessTokenRequest || refreshAccessToken();
-            await AsyncStorage.setItem('token', JSON.stringify(this.refreshAccessTokenRequest))
-            axios.defaults.headers.common['Authorization'] = `Bearer ${this.refreshAccessTokenRequest.access_token}`;
-            originalRequest.headers['Authorization'] = `Bearer ${this.refreshAccessTokenRequest.access_token}`;
-            axios.defaults.headers.common['refresh_token'] = this.refreshAccessTokenRequest.refresh_token;
-            originalRequest.headers['refresh_token'] = this.refreshAccessTokenRequest.refresh_token;
-            return this.refreshAccessTokenRequest
-              .then(() => this.instance(originalRequest))
-              .catch(error => console.log(error))
-              .finally(() => {
-                this.refreshAccessTokenRequest = null;
-              });
-          }
-        },
-      );
-    }).catch(e => {
-      console.log("Http có lỗi", e)
-      this.instance = undefined
-    })
+    this.instance.interceptors.response.use(
+      config => config.data,
+      error => {
+        if (error.response.status === 401) {
+          this.refreshAccessTokenRequest =
+            this.refreshAccessTokenRequest || refreshAccessToken();
+
+          return this.refreshAccessTokenRequest
+            .then(() => this.instance(error.response.config))
+            .catch(error => console.log(error))
+            .finally(() => {
+              this.refreshAccessTokenRequest = null;
+            });
+        }
+      },
+    );
   }
 
   get(url, config) {

@@ -2,12 +2,14 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { TextInput, TouchableOpacity, View } from 'react-native';
 import Conan from '../../assets/conan.jpeg';
+import { useAuth } from '../../context/AuthContext';
 import Avatar from './Avatar';
 
 const Input = ({ styles }) => {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'))
   const navigation = useNavigation();
-
+  const {
+    authStateContext: { currentUser = {} },
+  } = useAuth();
   return (
     <View
       style={{
