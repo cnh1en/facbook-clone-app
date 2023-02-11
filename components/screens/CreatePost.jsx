@@ -51,14 +51,11 @@ const CreatePost = () => {
   
   const handleSubmit = async () => {
     setLoading(true)
-    const file = await uploadAsyncFile(images[0].uri)
-    console.log(file,123)
-    // const rs = await createPost({
-    //   content: content,
-    //   media_url: [],
-    //   modified_level: 'public'
-    // })
-    // console.log("rs",rs)
+    const rs = await createPost({
+      content: content,
+      media_url: [],
+      modified_level: 'public'
+    })
     setLoading(false)
   }
 
